@@ -18,6 +18,7 @@
 
 #include "cldib_quant.h"
 
+RGBQUAD convTransparentColor;
 
 //! Parse \a str into an RGBQUAD
 /*! \param str	String to parse. Allowed formats are 16bit hex 
@@ -682,9 +683,18 @@ bool data_true_to_true(void *dstv, const void *srcv, int srcS,
 			RGBTRIPLE *dstD3= (RGBTRIPLE*)dstv;
 			for(ii=0; ii<srcS/4; ii++)
 			{
-				dstD3[ii].rgbtBlue=  srcD4[ii].rgbBlue;
-				dstD3[ii].rgbtGreen= srcD4[ii].rgbGreen;
-				dstD3[ii].rgbtRed=   srcD4[ii].rgbRed;
+                if (srcD4[ii].rgbReserved == 0)     //transparent pixel, use transparency color to then handle palette correctly
+                {
+                    dstD3[ii].rgbtBlue = convTransparentColor.rgbBlue;
+                    dstD3[ii].rgbtGreen = convTransparentColor.rgbGreen;
+                    dstD3[ii].rgbtRed = convTransparentColor.rgbRed;
+                }
+                else
+                {
+                    dstD3[ii].rgbtBlue = srcD4[ii].rgbBlue;
+                    dstD3[ii].rgbtGreen = srcD4[ii].rgbGreen;
+                    dstD3[ii].rgbtRed = srcD4[ii].rgbRed;
+                }
 			}
 		}
 		return true;

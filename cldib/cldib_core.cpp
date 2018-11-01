@@ -463,7 +463,7 @@ bool dib_vflip2(CLDIB *dib)
 *	  dimensions of \c src.
 *	\return Copied and cropped bitmap.	
 */
-CLDIB *dib_copy(CLDIB *src, int ll, int tt, int rr, int bb, bool bClip)
+CLDIB *dib_copy(CLDIB *src, int ll, int tt, int rr, int bb, bool bClip, int emptyColor)
 {
 	if(src==NULL || ll==rr || tt==bb)
 		return NULL;
@@ -512,7 +512,7 @@ CLDIB *dib_copy(CLDIB *src, int ll, int tt, int rr, int bb, bool bClip)
 	// if we're not clipping, we have to be careful at the boundaries
 	if(!bClip)
 	{
-		memset(dib_get_img(dst), 0, dib_get_size_img(dst));
+		memset(dib_get_img(dst), emptyColor, dib_get_size_img(dst));
 		dstW= MIN(rr,srcW) - MAX(ll,0);
 		dstH= MIN(bb,srcH) - MAX(tt,0);
 	}

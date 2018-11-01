@@ -315,7 +315,7 @@ void dib_free(CLDIB *dib);
 CLDIB *dib_clone(CLDIB *src);
 bool dib_mov(CLDIB *dst, CLDIB *src);
 INLINE RGBQUAD *dib_pal_cpy(CLDIB *dst, CLDIB *src);
-CLDIB *dib_copy(CLDIB *src, int ll, int tt, int rr, int bb, bool bClip);
+CLDIB *dib_copy(CLDIB *src, int ll, int tt, int rr, int bb, bool bClip, int emptyColor = 0xff);
 bool dib_paste(CLDIB *dst, CLDIB *src, int dstX, int dstY);
 
 bool dib_hflip(CLDIB *dib);

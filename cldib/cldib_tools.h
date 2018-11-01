@@ -108,6 +108,8 @@ bool data_8_to_true(void *dstv, const void *srcv, int srcS,
 bool data_true_to_true(void *dstv, const void *srcv, int srcS, 
 	int srcB, int dstB);
 
+extern RGBQUAD convTransparentColor;
+
 // \}
 
 /*!	\}	*/

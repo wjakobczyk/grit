@@ -61,6 +61,8 @@ bool grit_prep(GritRec *gr)
 	// TODO: clear internals
 	lprintf(LOG_STATUS, "Preparing data.\n");
 
+    convTransparentColor = gr->gfxAlphaColor;
+
 	if(grit_prep_work_dib(gr) == false)
 	{
 		lprintf(LOG_ERROR, "  No work DIB D: .\n");
@@ -125,7 +127,7 @@ bool grit_prep_work_dib(GritRec *gr)
 	// --- resize ---
 	CLDIB *dib= dib_copy(gr->srcDib, 
 		gr->areaLeft, gr->areaTop, gr->areaRight, gr->areaBottom, 
-		false);
+		false, gr->gfxAlphaColor.rgbBlue);
 	if(dib == NULL)
 	{
 		lprintf(LOG_ERROR, "  Work-DIB creation failed.\n");		
