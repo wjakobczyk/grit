@@ -449,7 +449,15 @@ bool dib_vflip2(CLDIB *dib)
 	return true;
 }
 
-
+inline void memset32(void *buf, unsigned int c, size_t n)
+{
+    __asm {
+        mov ecx, n
+        mov eax, c
+        mov edi, buf
+        rep stosd
+    }
+}
 //! Copies a portion of a bitmap (all; ok)
 /*! Similar to \c dib_clone, but can crop the image too. The 
 *	boundaries of the new bitmap need not fit inside the source; the 
@@ -512,7 +520,28 @@ CLDIB *dib_copy(CLDIB *src, int ll, int tt, int rr, int bb, bool bClip, int empt
 	// if we're not clipping, we have to be careful at the boundaries
 	if(!bClip)
 	{
-		memset(dib_get_img(dst), emptyColor, dib_get_size_img(dst));
+        if (srcB == 32)
+        {
+            memset32(dib_get_img(dst), emptyColor, dib_get_size_img(dst) / 4);
+        }
+        else if (srcB == 8)
+        {
+            RGBQUAD *pal = dib_get_pal(dst);
+            int emptyColorIdx = 0;
+            for (; emptyColorIdx < 256; emptyColorIdx++)
+            {
+                if (rgb2clr(pal[emptyColorIdx]) == emptyColor)
+                {
+                    break;
+                }
+            }
+            if (emptyColorIdx == 256)
+            {
+                emptyColorIdx = 0;
+            }
+
+            memset(dib_get_img(dst), emptyColorIdx, dib_get_size_img(dst));
+        }
 		dstW= MIN(rr,srcW) - MAX(ll,0);
 		dstH= MIN(bb,srcH) - MAX(tt,0);
 	}
